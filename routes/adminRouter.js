@@ -1,11 +1,9 @@
 const router = require('express').Router();
 
-const createAdmin = require('../controllers/admin/createAdmin');
-const deleteAdmin = require('../controllers/admin/deleteAdmin');
-const changeAdminStatus = require('../controllers/admin/changeAdminStatus');
+const {createAdmin, changeStatus, deleteAdmin} = require('../controllers/admin/adminData');
 
-router.post('/create', createAdmin.create);
-router.get('/delete/:id', deleteAdmin.delete);
-router.put('/changeStatus', changeAdminStatus.changeStatus);
+router.post('/create', createAdmin);
+router.get('/delete/:id', deleteAdmin);
+router.put('/changeStatus', changeStatus);
 
 module.exports = router;
