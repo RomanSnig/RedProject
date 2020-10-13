@@ -1,0 +1,17 @@
+.header{
+  display: flex;
+  background-color: black;
+  align-items: center;
+  height: 50px;
+}
+
+.header a{
+  flex-grow: 1;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+}
+
+.header a:hover{
+  color: lawngreen;
+}

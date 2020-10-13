@@ -1,0 +1,38 @@
+<p>status3 works!</p>
+
+<div class="all_tasks">
+  <div class="task_class" *ngFor="let admins of admin">
+    Admin name: {{admins.name}} <br>
+    Admin surname: {{admins.surname}}
+    <br>
+    Admin email: {{admins.email}} <br>
+    Admin status: {{admins.status}} <br>
+    Admin phone: {{admins.phone}} <br>
+    Admin rights: {{admins.rights}}
+    <button class="task_button" (click)="editButton()" *ngIf="!adminChange">Edit this task</button>
+    <form #editAdminForm = "ngForm" (ngSubmit)="changeData(editAdminForm.form.value)" *ngIf="adminChange">
+      <label> Name: <br>
+        <textarea type="text" name="name" class="form_subject" ngModel="{{admins.name}}" #adminName="ngModel" [ngStyle]="{border: adminName.invalid && adminName.touched ? 'solid 2px red' : 'solid 1px black'}" minlength="1" maxlength="111" required></textarea>
+      </label> <br>
+      <label> Surname: <br>
+        <textarea name="surname" type="text" class="form_info" ngModel="{{admins.surname}}" #adminSurname="ngModel" [ngStyle]="{border: adminSurname.invalid && adminSurname.touched ? 'solid 2px red' : 'solid 1px black'}" required minlength="1" maxlength="111"></textarea>
+      </label> <br>
+      <label> Email: <br>
+        <textarea type="text" name="email" required ngModel="{{admins.email}}" #adminEmail="ngModel" [ngStyle]="{border: adminEmail.invalid && adminEmail.touched ? 'solid 2px red' : 'solid 1px black'}" minlength="5" maxlength="111"></textarea>
+      </label> <br>
+      <label> Phone: <br>
+        <textarea name="phone" type="text" required ngModel="{{admins.phone}}" #adminPhone="ngModel" [ngStyle]="{border: adminPhone.invalid && adminPhone.touched ? 'solid 2px red' : 'solid 1px black'}" minlength="5" maxlength="111"></textarea>
+      </label> <br>
+      <label> Rights: <br>
+        <textarea name="rights" type="number" required ngModel="{{admins.rights}}" #adminRights="ngModel" [ngStyle]="{border: adminRights.invalid && adminRights.touched ? 'solid 2px red' : 'solid 1px black'}" minlength="1" maxlength="111"></textarea>
+      </label> <br>
+      <label> Status: <br>
+        <textarea name="status" type="number" required ngModel="{{admins.status}}" #adminStatus="ngModel" [ngStyle]="{border: adminStatus.invalid && adminStatus.touched ? 'solid 2px red' : 'solid 1px black'}" minlength="1" maxlength="111"></textarea>
+      </label>
+      <label>
+        <textarea name="_id" type="string" style="display: none" required ngModel="{{admins._id}}"></textarea>
+      </label>
+      <button style="font-size: 150%" type='submit' [disabled]="editAdminForm.invalid">Change!</button>
+    </form>
+  </div>
+</div>
