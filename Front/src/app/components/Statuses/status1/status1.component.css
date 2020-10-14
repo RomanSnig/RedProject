@@ -1,0 +1,12 @@
+.all_admins {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.all_admins div {
+  flex-basis: 33%;
+}
+
+/*.admin_class {*/
+/*  border: solid 1px grey;*/
+/*}*/

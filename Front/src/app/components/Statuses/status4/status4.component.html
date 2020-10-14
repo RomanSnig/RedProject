@@ -1,7 +1,7 @@
 <p>status4 works!</p>
 
-<div class="all_tasks">
-  <div class="task_class" *ngFor="let admins of admin">
+<div class="all_admins">
+  <div class="admin_class" *ngFor="let admins of admin">
     Admin name: {{admins.name}} <br>
     Admin surname: {{admins.surname}}
     <br>
@@ -9,8 +9,8 @@
     Admin status: {{admins.status}} <br>
     Admin phone: {{admins.phone}} <br>
     Admin rights: {{admins.rights}}
-    <button class="task_button" (click)="editButton()" *ngIf="!adminChange">Edit this task</button>
-    <form #editAdminForm = "ngForm" (ngSubmit)="changeData(editAdminForm.form.value)" *ngIf="adminChange">
+    <button class="task_button" (click)="editButton(admins._id)" *ngIf="!admins.changeForm">Edit this admin</button>
+    <form #editAdminForm = "ngForm" (ngSubmit)="changeData(editAdminForm.form.value)" *ngIf="admins.changeForm">
       <label> Name: <br>
         <textarea type="text" name="name" class="form_subject" ngModel="{{admins.name}}" #adminName="ngModel" [ngStyle]="{border: adminName.invalid && adminName.touched ? 'solid 2px red' : 'solid 1px black'}" minlength="1" maxlength="111" required></textarea>
       </label> <br>
@@ -27,12 +27,20 @@
         <textarea name="rights" type="number" required ngModel="{{admins.rights}}" #adminRights="ngModel" [ngStyle]="{border: adminRights.invalid && adminRights.touched ? 'solid 2px red' : 'solid 1px black'}" minlength="1" maxlength="111"></textarea>
       </label> <br>
       <label> Status: <br>
-        <textarea name="status" type="number" required ngModel="{{admins.status}}" #adminStatus="ngModel" [ngStyle]="{border: adminStatus.invalid && adminStatus.touched ? 'solid 2px red' : 'solid 1px black'}" minlength="1" maxlength="111"></textarea>
+        <select name="status" required #adminStatus="ngModel" ngModel="{{admins.status}}">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select> <br>
+<!--        <textarea name="status" type="number" required ngModel="{{admins.status}}" #adminStatus="ngModel" [ngStyle]="{border: adminStatus.invalid && adminStatus.touched ? 'solid 2px red' : 'solid 1px black'}" minlength="1" maxlength="111"></textarea>-->
       </label>
       <label>
         <textarea name="_id" type="string" style="display: none" required ngModel="{{admins._id}}"></textarea>
       </label>
       <button style="font-size: 150%" type='submit' [disabled]="editAdminForm.invalid">Change!</button>
+      <button type="button" style="margin-left: 5px" (click)="editButton(admins._id)">Cancel</button>
     </form>
   </div>
 </div>

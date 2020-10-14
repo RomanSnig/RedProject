@@ -53,7 +53,8 @@ module.exports.changeAdminData = async(req, res) => {
         // if(isCreated[0].email!==req.body.email) console.log("fffff")
 
         // Перевіряю чи не зареєстрований уже якись інший користувач на цей "новий" email, якщо ні - продовжую
-        if (isCreatedByEmail.length && isCreated[0].email!==req.body.email) res.json('Admin is already created')
+        if (isCreatedByEmail.length && isCreated[0].email!==req.body.email)
+            res.json('Admin is already created with email: ' + isCreatedByEmail[0].email)
         else res.json(await Admin.findByIdAndUpdate(req.body._id, req.body));
     } catch (error) {
         res.status(404).json({

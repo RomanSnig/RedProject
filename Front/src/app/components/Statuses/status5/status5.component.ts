@@ -18,9 +18,9 @@ export class Status5Component implements OnInit {
     email: '',
     status: null,
     phone: '',
-    rights: null
+    rights: null,
+    changeForm: false
   }];
-  adminChange = false;
   constructor(private http: HttpClient,
               private dataService: AdminServiceService,
               private router: Router) { }
@@ -36,19 +36,27 @@ export class Status5Component implements OnInit {
   }
   changeData(editAdmin: Admin): Subscription {
     console.log(editAdmin);
-    return this.dataService.changeAdminData(editAdmin).subscribe((changedAdmin: Admin) => {
+    return this.dataService.changeAdminData(editAdmin).subscribe((changedAdmin: any) => {
       console.log('*********');
       console.log(changedAdmin);
       console.log('*********');
       // localStorage.setItem('admin', JSON.stringify(changedAdmin));
-      this.adminChange = !this.adminChange;
+      this.editButton(editAdmin._id);
       this.admins();
+      if (changedAdmin === 'Admin is already created with email: ' + editAdmin.email) {
+        alert(changedAdmin);
+      }
     },  error => {
       console.log(error);
-      alert(error.error.msg);
+      alert(error.error.message);
     });
   }
-  editButton(): void {
-    this.adminChange = !this.adminChange;
+  editButton(adminID): void {
+    this.admin.forEach(person => {
+      if (person._id === adminID) {
+        console.log(person);
+        return person.changeForm = !person.changeForm;
+      }});
+    console.log(adminID);
   }
 }

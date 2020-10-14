@@ -1,0 +1,8 @@
+.all_admins {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.all_admins div {
+  flex-basis: 33%;
+}

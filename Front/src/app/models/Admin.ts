@@ -6,4 +6,5 @@ export class Admin{
   phone: string;
   rights: number;
   status: number;
+  changeForm: boolean;
 }
