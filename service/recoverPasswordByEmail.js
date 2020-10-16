@@ -12,9 +12,9 @@ module.exports.recoverPassword = async (email, hashedPassword) => {
     const info = await transport.sendMail({
         from: EMAIL,
         to: email,
-        subject: 'Test message',
-        text: 'New Password: ' + hashedPassword,
-        html: '<b>ok</b>'
+        subject: 'Recover Password',
+        // text: 'New Password: ' + hashedPassword,
+        html: '<b>New Password:</b>' + hashedPassword
     });
     return info.response;
 };

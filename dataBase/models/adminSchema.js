@@ -17,7 +17,7 @@ const adminSchema = new Schema({
         type: Number
     },
     status: {
-        type: Number,
+        type: Number
         // ref: 'adminStatus'
     }
 })

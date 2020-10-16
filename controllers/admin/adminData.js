@@ -1,13 +1,17 @@
 const Admin = require('../../dataBase/models/adminSchema');
+const Person = require('../../dataBase/models/personSchema');
+const {hashPassword} = require('../../helpers/passwordHasher');
 
 module.exports.createAdmin = async(req,res) => {
-    let{name, surname, email, phone, rights, status } = req.body;
+    let{name, surname, email, phone, rights, status, password} = req.body;
     try {
-        if(!name || !surname || !email || !phone || !rights || !status) throw new Error('Some field is empty');
+        if(!name || !surname || !email || !phone || !rights || !status || !password) throw new Error('Some field is empty');
         // Перевіряю чи не зареєстрований уже, якщо ні - продовжую
         const isCreated = await Admin.find({email: email});
         if (isCreated.length) res.json('Admin is already created')
-        else res.json(await Admin.create(req.body))
+        else {res.json(await Admin.create(req.body));
+        const hashedPassword = await hashPassword(password);
+        await Person.create({email, password: hashedPassword})}
     } catch (error) {
         res.status(404).json({
             success: false,
@@ -19,7 +23,9 @@ module.exports.createAdmin = async(req,res) => {
 
 module.exports.deleteAdmin = async(req,res) => {
     try {
-        res.json(await Admin.findByIdAndDelete(req.params.id))
+        await Person.findOneAndDelete({email: req.params.email})
+        res.json(await Admin.findOneAndDelete({email: req.params.email}))
+
     } catch (error) {
         res.status(404).json({
             success: false,
@@ -30,8 +36,8 @@ module.exports.deleteAdmin = async(req,res) => {
 };
 
 module.exports.changeStatus = async(req,res) => {
-    let {id, status} = req.body;
     try {
+        let {id, status} = req.body;
         if(!id || !status) throw new Error('Some field is empty');
         res.json(await Admin.findByIdAndUpdate({_id: id},{status}));
     } catch (error) {
@@ -55,7 +61,9 @@ module.exports.changeAdminData = async(req, res) => {
         // Перевіряю чи не зареєстрований уже якись інший користувач на цей "новий" email, якщо ні - продовжую
         if (isCreatedByEmail.length && isCreated[0].email!==req.body.email)
             res.json('Admin is already created with email: ' + isCreatedByEmail[0].email)
-        else res.json(await Admin.findByIdAndUpdate(req.body._id, req.body));
+        else {res.json(await Admin.findByIdAndUpdate(req.body._id, req.body));
+              await Person.findOneAndUpdate(isCreated[0].email, req.body.email);
+        }
     } catch (error) {
         res.status(404).json({
             success: false,
