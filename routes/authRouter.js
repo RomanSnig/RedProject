@@ -4,7 +4,7 @@ const {auth, recoverPassword, logout, changePassword} = require('../controllers/
 
 router.post('/login', auth);
 router.post('/recoverPassword', recoverPassword);
-router.post('/changePassword', changePassword);
-router.get('/logout/:id', logout);
+router.put('/changePassword', changePassword);
+router.post('/logout', logout);
 
 module.exports = router;

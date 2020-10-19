@@ -36,9 +36,9 @@ module.exports.auth = async (req, res) => {
 
 module.exports.logout = async (req, res) => {
     try {
-        const isTokenPresent = await personSchema.findById({_id: req.params.id});
+        const isTokenPresent = await personSchema.findById({_id: req.body._id});
         if(!isTokenPresent.token) throw new Error('NO TOKEN!!');
-        await personSchema.findByIdAndUpdate({_id: req.params.id}, {token: undefined});
+        await personSchema.findByIdAndUpdate({_id: req.body._id}, {token: undefined});
         res.json({success: true})
     } catch (error) {
         console.log(error)

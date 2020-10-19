@@ -5,7 +5,9 @@ const cors = require('cors');
 const DataBase = require('./dataBase/connect');
 
 const adminRouter = require('./routes/adminRouter');
-const personRouter = require('./routes/personRouter');
+const authRouter = require('./routes/authRouter');
+const worksRouter = require('./routes/worksRouter');
+const lookupRouter = require('./routes/lookupRouter');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -14,7 +16,9 @@ app.get('/', (req,res) => {
     res.end('GOOD')
 });
 app.use('/admin', adminRouter);
-app.use('/person', personRouter);
+app.use('/auth', authRouter);
+app.use('/works', worksRouter);
+app.use('/lookup', lookupRouter);
 
 app.use('*', (req, res)=> {
     res.status(404).json('Page not found')
@@ -22,3 +26,26 @@ app.use('*', (req, res)=> {
 app.listen(3000, ()=> {
     console.log('listening');
 });
+
+
+// const elasticsearch = require('elasticsearch');
+//
+// const client = new elasticsearch.Client({
+//     host: 'localhost:9200',
+//     log: 'trace' });
+// client.indices.delete({
+//     index: 'test_index',
+//     ignore: [404]
+// }).then(function (body) {
+//     console.log('index was deleted or never existed');
+// }, function (error) {
+//     // oh no!
+// });
+// client.search({
+//     q: 'pants'
+// }).then(function (body) {
+//     let hits = body.hits.hits;
+//     console.log(hits);
+// }, function (error) {
+//     console.trace(error.message);
+// });

@@ -39,6 +39,8 @@ module.exports.changeStatus = async(req,res) => {
     try {
         let {id, status} = req.body;
         if(!id || !status) throw new Error('Some field is empty');
+        const isPresent = await Admin.findById({_id:id});
+        if(!isPresent) throw new Error('No Admin!!');
         res.json(await Admin.findByIdAndUpdate({_id: id},{status}));
     } catch (error) {
         res.status(404).json({
