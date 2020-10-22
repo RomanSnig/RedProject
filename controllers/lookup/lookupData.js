@@ -1,10 +1,13 @@
-const lookup = require('../../dataBase/models/lookup');
+const Lookup = require('../../dataBase/models/lookup');
+const moment = require('moment');
 
 module.exports.create = async (req, res) => {
     try{
-        let {key, subject, type, timeOfCreate, timeOfChange} = req.body;
-        if(!key || !subject || !type || !timeOfChange || !timeOfCreate) throw new Error('Some field is Empty!!!');
-        res.json(await lookup.create(req.body));
+        let {key, subject, type} = req.body;
+        if(!key || !subject || !type) throw new Error('Some field is Empty!!!');
+        const lookupDate = moment().format('MMMM Do YYYY, h:mm:ss a');
+        res.json(await Lookup.create({
+            key, subject, type, timeOfCreate: lookupDate, timeOfLastChange: lookupDate}));
     } catch (error) {
         console.log(error);
         res.status(400).json({
@@ -16,7 +19,11 @@ module.exports.create = async (req, res) => {
 
 module.exports.keyToSubject = async (req, res) => {
     try{
-        await lookup.findOne({key: req.params.key})
+        const lookup = await Lookup.findOne({key: req.params.key});
+        res.json({
+            success: true,
+            message: lookup.subject
+        })
     } catch (error) {
         console.log(error);
         res.status(400).json({

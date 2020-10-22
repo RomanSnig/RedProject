@@ -1,11 +1,11 @@
 const {Schema, model} = require('mongoose');
 
 const lookup = new Schema({
-    key: Number,
+    key: String,
     subject: String,
     type: String,
     timeOfCreate: String,
-    timeOfChange: String
+    timeOfLastChange: String
 });
 
 module.exports = model('lookupData', lookup);

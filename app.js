@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const DataBase = require('./dataBase/connect');
+const {client} = require('./dataBase/Elasticsearch/connect');
 
 const adminRouter = require('./routes/adminRouter');
 const authRouter = require('./routes/authRouter');
@@ -26,26 +27,3 @@ app.use('*', (req, res)=> {
 app.listen(3000, ()=> {
     console.log('listening');
 });
-
-
-// const elasticsearch = require('elasticsearch');
-//
-// const client = new elasticsearch.Client({
-//     host: 'localhost:9200',
-//     log: 'trace' });
-// client.indices.delete({
-//     index: 'test_index',
-//     ignore: [404]
-// }).then(function (body) {
-//     console.log('index was deleted or never existed');
-// }, function (error) {
-//     // oh no!
-// });
-// client.search({
-//     q: 'pants'
-// }).then(function (body) {
-//     let hits = body.hits.hits;
-//     console.log(hits);
-// }, function (error) {
-//     console.trace(error.message);
-// });

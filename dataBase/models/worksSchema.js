@@ -4,12 +4,15 @@ const works = new Schema({
     name: {
         type: String
     },
-    text: {
+    style: {
         type: String
     },
-    personId: {
+    adminId: {
         type: Types.ObjectId,
-        ref: 'personSchema'
+        ref: 'adminSchema'
+    },
+    dateOfCreation: {
+        type: String
     }
 });
 

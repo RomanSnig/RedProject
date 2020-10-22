@@ -7,17 +7,14 @@ const adminSchema = new Schema({
     surname: {
         type: String
     },
-    email: {
-        type: String
-    },
     phone: {
         type: String
     },
     rights: {
-        type: Number
+        type: String
     },
     status: {
-        type: Number
+        type: String
         // ref: 'adminStatus'
     }
 })
