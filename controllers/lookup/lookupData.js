@@ -32,3 +32,37 @@ module.exports.keyToSubject = async (req, res) => {
         })
     }
 }
+
+module.exports.findAll = async (req, res) => {
+    try{
+        const lookup = await Lookup.find({});
+        if(!lookup) throw new Error('No lookup DATA!!');
+        // lookup.sort(data => data.timeOfLastChange);
+        res.json({
+            success: true,
+            message: lookup
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            success: false,
+            message: error.message
+        })
+    }
+};
+
+module.exports.findByType = async (req, res) => {
+    try {
+        const lookup = await Lookup.find({type: req.params.type});
+        res.json({
+            success: true,
+            message: lookup
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            success: false,
+            message: error.message
+        })
+    }
+}

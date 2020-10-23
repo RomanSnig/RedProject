@@ -3,6 +3,7 @@ const Person = require('../../dataBase/models/personSchema');
 const {hashPassword} = require('../../helpers/passwordHasher');
 const {client} = require('../../dataBase/Elasticsearch/connect');
 const Lookup = require('../../dataBase/models/lookup');
+const moment = require('moment');
 
 module.exports.createAdmin = async(req,res) => {
     let{name, surname, email, phone, rights, status, password} = req.body;
@@ -11,13 +12,15 @@ module.exports.createAdmin = async(req,res) => {
         // Перевіряю чи не зареєстрований уже, якщо ні - продовжую
         const isCreated = await Person.find({email: email});
         if (isCreated.length) res.json('Admin is already created')
-        else {const createdAdmin = await Admin.create(req.body);
-        const hashedPassword = await hashPassword(password);
-        await Person.create({email, password: hashedPassword, adminId: createdAdmin._id});
-        const elastic = await client.index({
+        else {const adminDate = moment().format('MMMM Do YYYY, h:mm:ss a');
+            const createdAdmin = await Admin.create({
+                name, email, surname, rights, phone, status, timeOfCreate: adminDate, timeOfLastChange: adminDate});
+            const hashedPassword = await hashPassword(password);
+            await Person.create({email, password: hashedPassword, adminId: createdAdmin._id});
+            const elastic = await client.index({
             index: 'admins',
             body: {
-                email: email, name: name, surname: surname, rights: rights, phone: phone, status: status
+                email: email, name: name, surname: surname, rights: rights, phone: phone, status: status, timeOfCreate: adminDate, timeOfLastChange: adminDate
             },
             id: createdAdmin._id
         })
@@ -59,8 +62,9 @@ module.exports.changeStatus = async(req,res) => {
         if(!id || !status) throw new Error('Some field is empty');
         const isPresent = await Admin.findById({_id:id});
         if(!isPresent) throw new Error('No Admin!!');
-        const admin = await Admin.findByIdAndUpdate({_id: id},{status: status});
-        const elastic = await client.update({index: 'admins', id: id, body: {doc:{status: status}}});
+        const adminDate = moment().format('MMMM Do YYYY, h:mm:ss a');
+        const admin = await Admin.findByIdAndUpdate({_id: id},{status: status, timeOfLastChange: adminDate});
+        const elastic = await client.update({index: 'admins', id: id, body: {doc:{status: status, timeOfLastChange: adminDate}}});
         res.json({
             success: true,
             admin: admin,
@@ -82,13 +86,26 @@ module.exports.changeData = async(req, res) => {
         if (!name || !surname || !status || !rights || !phone) throw new Error('Some field is Empty!!');
         const isPresent = await Admin.findById({_id:req.params.id});
         if (!isPresent) throw new Error('NO ADMIN!!!');
-        const admin = await Admin.findByIdAndUpdate({_id:req.params.id}, {name, surname, status, rights, phone});
-        const elastic = await client.update({index: 'admins', id: req.params.id, body: {doc: req.body}});
-        res.json({
-            success: true,
-            admin: admin,
-            elastic: elastic.body
-        })
+        if(status !== isPresent.status) {
+            const adminDate = moment().format('MMMM Do YYYY, h:mm:ss a');
+            const admin = await Admin.findByIdAndUpdate({_id: req.params.id}, {
+                name, surname, status, rights, phone, timeOfLastChange: adminDate});
+            const elastic = await client.update({index: 'admins', id: req.params.id, body: {doc: {
+                        name, surname, status, rights, phone, timeOfLastChange: adminDate
+                    }}});
+            res.json({
+                success: true,
+                admin: admin,
+                elastic: elastic.body
+            })
+        } else {
+            const admin = await Admin.findByIdAndUpdate({_id: req.params.id}, {name, surname, status, rights, phone});
+            const elastic = await client.update({index: 'admins', id: req.params.id, body: {doc: req.body}});
+            res.json({
+                success: true,
+                admin: admin,
+                elastic: elastic.body
+            })}
     } catch (error) {
         res.status(400).json({
             success: false,
@@ -115,8 +132,8 @@ module.exports.findAll = async (req, res) => {
             });
             return admin = admin._source
         })
-        console.log(adminsToResponse)
-        res.json(adminsToResponse)
+        // console.log(adminsToResponse)
+        res.json(adminsToResponse.sort(data => data.timeOfLastChange))
     } catch (error) {
         console.log(error)
         res.status(400).json({

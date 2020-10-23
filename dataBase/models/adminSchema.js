@@ -16,6 +16,12 @@ const adminSchema = new Schema({
     status: {
         type: String
         // ref: 'adminStatus'
+    },
+    timeOfCreate: {
+        type: String
+    },
+    timeOfLastChange: {
+        type: String
     }
 })
 
