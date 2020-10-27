@@ -18,10 +18,10 @@ const adminSchema = new Schema({
         // ref: 'adminStatus'
     },
     timeOfCreate: {
-        type: String
+        type: Date
     },
     timeOfLastChange: {
-        type: String
+        type: Date
     }
 })
 

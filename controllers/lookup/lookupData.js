@@ -19,7 +19,7 @@ module.exports.create = async (req, res) => {
 
 module.exports.keyToSubject = async (req, res) => {
     try{
-        const lookup = await Lookup.findOne({key: req.params.key});
+        let lookup = await Lookup.findOne({key: req.params.key});
         res.json({
             success: true,
             message: lookup.subject

@@ -5,7 +5,7 @@ const lookup = new Schema({
     subject: String,
     type: String,
     timeOfCreate: String,
-    timeOfLastChange: String
+    timeOfLastChange: Date
 });
 
 module.exports = model('lookupData', lookup);

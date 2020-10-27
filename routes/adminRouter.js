@@ -8,6 +8,6 @@ router.put('/changeStatus', changeStatus);
 router.put('/changeData/:id', changeData);
 router.get('/findAdminsByStatus/:status', findAdminsByStatus);
 router.get('/getById/:id', getAdminById);
-router.get('/findAll', findAll);
+// router.get('/findAll', findAll);
 
 module.exports = router;

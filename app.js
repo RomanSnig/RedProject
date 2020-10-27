@@ -20,10 +20,11 @@ app.use('/admin', adminRouter);
 app.use('/auth', authRouter);
 app.use('/works', worksRouter);
 app.use('/lookup', lookupRouter);
-
 app.use('*', (req, res)=> {
     res.status(404).json('Page not found')
 });
-app.listen(3000, ()=> {
+app.listen(process.argv[2], ()=> {
     console.log('listening');
 });
+// console.log(process.env.PORT);
+// console.log(process.env.MONGO);

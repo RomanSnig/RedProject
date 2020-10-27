@@ -9,17 +9,19 @@ module.exports.auth = async (req, res) => {
     try {
         let {email, password} = req.body;
         if (!email || !password) throw new Error('Some field is empty');
-        const isPresent = await personSchema.findOne({
+        let isPresent = await personSchema.findOne({
             email: email
         });
         if (!isPresent) throw new Error('You are not register!!!');
         if (isPresent.token) throw new Error('Token Is Present');
-        const {_id, password: hashPassword} = isPresent;
+        let {_id, password: hashPassword} = isPresent;
         const isPassOK = await checkHashPassword(password, hashPassword);
         if (!isPassOK) throw new Error('Password is wrong');
         const token = tokenizer({_id, email});
         await personSchema.findByIdAndUpdate({_id: _id}, {token: token});
-        isPresent.password = undefined;
+        delete isPresent._doc.password
+        // console.log(isPresent._doc)
+        // delete isPresent.password;
         res.json({
             access: true,
             message: token,
@@ -36,9 +38,9 @@ module.exports.auth = async (req, res) => {
 
 module.exports.logout = async (req, res) => {
     try {
-        const isTokenPresent = await personSchema.findById({_id: req.body._id});
-        if(!isTokenPresent.token) throw new Error('NO TOKEN!!');
-        await personSchema.findByIdAndUpdate({_id: req.body._id}, {token: undefined});
+        // let isTokenPresent = await personSchema.findById({_id: req.body._id});
+        // if(!isTokenPresent.token) throw new Error('NO TOKEN!!');
+        await personSchema.findByIdAndUpdate({_id: req.body._id}, {token: null});
         res.json({success: true})
     } catch (error) {
         console.log(error)
@@ -53,7 +55,7 @@ module.exports.recoverPassword = async (req, res) => {
     let {email} = req.body;
     try {
         if (!email) throw new Error('Some field is empty');
-        const isPresent = await personSchema.findOne({
+        let isPresent = await personSchema.findOne({
             email: email
         });
         if (!isPresent) throw new Error('NO USER WITH EMAIL:' + email);
@@ -76,7 +78,7 @@ module.exports.changePassword = async (req, res) => {
         console.log(req.body);
         let {password, _id, newPassword} = req.body;
         if(!password || !newPassword || !_id) throw new Error('Some field is Empty!');
-        const isPresent = await personSchema.findById({_id});
+        let isPresent = await personSchema.findById({_id});
         if(!isPresent) throw new Error('Admin is not Present');
         const {password: oldHashPassword} = isPresent;
         const isPassOK = await checkHashPassword(password, oldHashPassword);
