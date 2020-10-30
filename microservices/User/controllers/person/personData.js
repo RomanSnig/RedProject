@@ -38,8 +38,8 @@ module.exports.auth = async (req, res) => {
 
 module.exports.logout = async (req, res) => {
     try {
-        // let isTokenPresent = await personSchema.findById({_id: req.body._id});
-        // if(!isTokenPresent.token) throw new Error('NO TOKEN!!');
+        let isPresent = await personSchema.findById({_id: req.body._id});
+        if(!isPresent) throw new Error('No USER!!');
         await personSchema.findByIdAndUpdate({_id: req.body._id}, {token: null});
         res.json({success: true})
     } catch (error) {

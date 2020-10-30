@@ -1,6 +1,7 @@
 const {Client} = require('@elastic/elasticsearch');
 
-module.exports.client = new Client({node: 'http://localhost:9200'});
+// module.exports.client = new Client({node: 'http://localhost:9200'});
+module.exports.client = new Client({node: `${process.argv[4]}`});
 
 
 

@@ -1,4 +1,4 @@
-const tokenVerificator= require('../../helpers/tokenVerificator');
+const tokenVerificator = require('../../helpers/tokenVerificator');
 const tokenazer= require('../../helpers/tokenazer');
 const Person = require('../../dataBase/models/personSchema');
 module.exports.refreshToken = async (req, res) =>{

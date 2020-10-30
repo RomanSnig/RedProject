@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const DataBase = require('./dataBase/connect');
-const {client} = require('./dataBase/Elasticsearch/connect');
+// const {client} = require('./dataBase/Elasticsearch/connect');
 
 const adminRouter = require('./routes/adminRouter');
 

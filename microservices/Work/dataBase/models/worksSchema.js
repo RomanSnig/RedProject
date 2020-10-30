@@ -1,5 +1,4 @@
 const {Schema, model, Types} = require('mongoose');
-
 const works = new Schema({
     name: {
         type: String

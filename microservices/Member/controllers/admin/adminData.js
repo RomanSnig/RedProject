@@ -43,7 +43,8 @@ module.exports.createAdmin = async(req,res) => {
 
 module.exports.deleteAdmin = async(req,res) => {
     try {
-        let admin = await Admin.findByIdAndDelete({_id: req.params.id})
+        let admin = await Admin.findByIdAndDelete({_id: req.params.id});
+        if(admin === null) throw new Error('Admin not Present');
         await Person.findOneAndDelete({adminId: req.params.id})
         let elastic = await client.delete({
             index: 'admins',
@@ -131,6 +132,7 @@ module.exports.findAdminsByStatus = async(req, res) => {
     console.log(req.params)
     try {
         let elastic = await client.search({index: 'admins', body: {query: {match:{status: req.params.status}}}});
+        if(!elastic.length) throw new Error('Admin not Present');
         let admins = elastic.body.hits.hits;
         let lookup = await Lookup.find({type: 'adminStatus' || 'adminRights'});
         // const lookup = await Lookup.findOne({key: req.params.status});
@@ -165,6 +167,7 @@ module.exports.findAdminsByStatus = async(req, res) => {
 module.exports.getAdminById = async (req, res) => {
     try {
         let admin = await Admin.findById({_id: req.params.id});
+        if(!admin) throw new Error('No admin');
         let lookupStatus = await Lookup.findOne({key: admin.status});
         let lookupRights = await Lookup.findOne({key: admin.rights});
         admin.status = lookupStatus.subject;
